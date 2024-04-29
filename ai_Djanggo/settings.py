@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     "acountapp",
     "orders",
+    "user",
 ]
 
 MIDDLEWARE = [
@@ -78,9 +79,13 @@ WSGI_APPLICATION = "ai_Djanggo.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'datas',
+        'USER' : 'root',
+        'PASSWORD' : 'root', # 설정한 비밀번호로 적어주면 된다.
+        'HOST' : '127.0.0.1',
+        'PORT' : '3306',
     }
 }
 
