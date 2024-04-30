@@ -1,10 +1,10 @@
 from django.contrib import admin
 from django.urls import include, path
 
-from orders.views import OrderViewSet
+from user.views import getUser
 
 urlpatterns = [
 
-    path('orderview/',OrderViewSet),
+    path('getUser/', getUser),
 
 ]
