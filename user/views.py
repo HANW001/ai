@@ -32,10 +32,11 @@ def loginUser(request):
     print(user)
 
     # Authenticate if the user exists
-    # if user is not None:
-    token = get_random_string(length=32)
-    queryset = User.objects.filter(id=id)
-    serializer = userSerializer(queryset,many=True)
-    return Response({ 'message': 'Login successful','token':token,'userData':serializer.data }, status=status.HTTP_200_OK)
-    # else:
-        # return Response({ 'error': 'Invalid credentials' }, status=status.HTTP_401_UNAUTHORIZED)
+    if user is not None:
+        token = get_random_string(length=32)
+        queryset = User.objects.filter(id=id)
+        serializer = userSerializer(queryset,many=True)
+        return Response({ 'message': 'Login successful','token':token,'userData':serializer.data }, status=status.HTTP_200_OK)
+    else:
+        return Response({ 'error': 'Invalid credentials' }, status=status.HTTP_401_UNAUTHORIZED)
+    
