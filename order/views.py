@@ -7,14 +7,9 @@ from .serializers import orderSerializer
 from .models import Order
 from django.contrib.auth import authenticate, login
 from django.utils.crypto import get_random_string
+from datetime import datetime
 import requests
 import base64
-
-@api_view(['GET'])
-def getOrder(request):
-    queryset = Order.objects.all()
-    serializer = orderSerializer(queryset,many=True)
-    return Response(serializer.data)
 
 @api_view(['POST'])
 def getOrder(request):
@@ -84,3 +79,23 @@ def getAccess(request):
         # Handle other potential exceptions
         print(f"Unexpected error: {e}")
         return {'error': 'Internal server error'} 
+    
+
+@api_view(['POST'])
+def getOrder(request):
+    print('orders')
+    today = datetime.today()
+    mallid = request.data.get('id') 
+    access_token=request.data.get('access_token') 
+    start_date =  '2024-03-01'
+    end_date = today.date()
+    version= today.date()
+    url = f"https://{mallid}.cafe24api.com/api/v2/admin/orders?start_date={start_date}&end_date={end_date}"
+    headers = {
+        'Authorization': f"Bearer {access_token}",
+        'Content-Type': "application/json",
+        # 'X-Cafe24-Api-Version': f"{version}"
+        }
+    response = requests.request("GET", url, headers=headers)
+    response_data = response.json()
+    print(len(response_data['orders']))
