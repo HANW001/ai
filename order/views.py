@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 from django.shortcuts import redirect
+from django.db import connection
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
@@ -89,7 +90,6 @@ def getOrder(request):
     access_token=request.data.get('access_token') 
     start_date =  '2024-03-01'
     end_date = today.date()
-    version= today.date()
     url = f"https://{mallid}.cafe24api.com/api/v2/admin/orders?start_date={start_date}&end_date={end_date}"
     headers = {
         'Authorization': f"Bearer {access_token}",
@@ -98,4 +98,96 @@ def getOrder(request):
         }
     response = requests.request("GET", url, headers=headers)
     response_data = response.json()
-    print(len(response_data['orders']))
+    order_data = response_data['orders']
+    # print(order_data[0])
+    prd_id = []
+    sql_data = []
+    
+    for i in range(len(response_data['orders'])):
+        prd_id=order_data[i]['order_id']
+
+        receivers_data=get_receivers(mallid,access_token, prd_id)
+        items_data = get_items(mallid,access_token, prd_id)
+        print(len(items_data))
+        for j in range(len(items_data)):
+                try:
+                    date = items_data[j]['ordered_date'].split('T')[0]
+                
+
+                    prd_data = {}
+                    prd_data['idx'] =mallid+'-'+items_data[j]['order_item_code']
+                    prd_data['order_mall'] =mallid
+                    prd_data['order_id'] =order_data[i]['order_id']
+                    prd_data['order_date'] = date
+                    prd_data['order_name'] =items_data[j]['product_name']
+                    prd_data['order_options'] =items_data[j]['option_value']
+                    prd_data['order_price'] =items_data[j]['product_price'].split('.')[0]
+                    prd_data['order_option_price'] =items_data[j]['option_price'].split('.')[0]
+                    prd_data['order_count'] =items_data[j]['quantity']
+                    prd_data['order_person'] =receivers_data['name']
+                    prd_data['order_address'] =receivers_data['address_full']
+                    prd_data['order_phone'] =receivers_data['cellphone']
+                    prd_data['order_delivery'] =items_data[j]['status_text']
+                    
+                    
+                    serializer = orderSerializer(data=prd_data) 
+                    print(serializer)
+                    if serializer.is_valid(): 
+                        serializer.save() 
+                        
+                   
+                # sql_data.append(prd_data)
+                except:
+                    pass
+    return Response('erializer.data')
+            
+
+    
+    
+
+
+
+def get_receivers(mallid,access_token, prd_id):
+    url = f"https://{mallid}.cafe24api.com/api/v2/admin/orders/{prd_id}/receivers"
+    headers = {
+            'Authorization': f"Bearer {access_token}",
+            'Content-Type': "application/json",
+            }
+    try:
+        order_response = requests.request("GET", url, headers=headers)
+        order_response_data = order_response.json()
+        receivers_data=order_response_data['receivers'][0]
+        return receivers_data
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching receivers: {e}")
+        return None
+
+def get_receivers(mallid,access_token, prd_id):
+    url = f"https://{mallid}.cafe24api.com/api/v2/admin/orders/{prd_id}/receivers"
+    headers = {
+            'Authorization': f"Bearer {access_token}",
+            'Content-Type': "application/json",
+            }
+    try:
+        order_response = requests.request("GET", url, headers=headers)
+        order_response_data = order_response.json()
+        receivers_data=order_response_data['receivers'][0]
+        return receivers_data
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching receivers: {e}")
+        return None
+    
+def get_items(mallid,access_token, prd_id):
+    url = f"https://{mallid}.cafe24api.com/api/v2/admin/orders/{prd_id}/items"
+    headers = {
+            'Authorization': f"Bearer {access_token}",
+            'Content-Type': "application/json",
+            }
+    try:
+        order_response = requests.request("GET", url, headers=headers)
+        order_response_data = order_response.json()
+        items_data=order_response_data['items']
+        return items_data
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching items: {e}")
+        return None
