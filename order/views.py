@@ -163,7 +163,7 @@ def getOrder(request):
   access_token = request.data.get('access_token')
 
   # Set initial start date (2021-01-01)
-  start_date = datetime(2024, 3, 1)
+  start_date = datetime(2024, 5, 29)
 #   time.sleep(0.5)
   while start_date <= today:
     # Update end date based on start date and today

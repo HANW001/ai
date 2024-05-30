@@ -41,17 +41,14 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     'rest_framework',
-    'corsheaders',
     "order",
     "user",
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
-    # "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -75,7 +72,6 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "ai_Djanggo.wsgi.application"
 
 
 # Database
@@ -134,17 +130,5 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-CORS_ORIGIN_ALLOW_ALL = True # <- 모든 호스트 허용
 
-# or 
 
-CORS_ORIGIN_WHITELIST = (
-
-    "http://localhost:8000",
-    "http://127.0.0.1:8000"
-)
-
-# 세션 관련 설정
-SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # 기본 세션 엔진 사용 (데이터베이스 사용)
-SESSION_COOKIE_AGE =60 * 60 * 24 * 7   # 1주일 (7일) 동안 유지
-SESSION_SAVE_EVERY_REQUEST = True  # 매 요청마다 세션 저장
