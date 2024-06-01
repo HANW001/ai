@@ -25,7 +25,9 @@ python -m venv venv
 - 장고 폴더생성
 
 ```python
-django-admin startproject ai_Django .
+django-admin startproject ai_Django . # 시작할때
+
+python manage.py startapp 폴더명 # 새로생성
 ```
 
 - 서버실행

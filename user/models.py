@@ -1,6 +1,6 @@
 from django.db import models
 
-class User(models.Model):
+class Cafe24User(models.Model):
     mall = models.CharField(max_length=255)
     id = models.CharField(primary_key=True, max_length=45)
     password = models.CharField(max_length=255)
@@ -10,4 +10,16 @@ class User(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'user'
+        db_table = 'cafe24_user'
+
+
+class ImwebUser(models.Model):
+    mall = models.CharField(primary_key=True, max_length=255)
+    id = models.CharField(max_length=255)
+    password = models.CharField(max_length=255)
+    api_key = models.CharField(max_length=255)
+    secret_key = models.CharField(max_length=255)
+
+    class Meta:
+        managed = False
+        db_table = 'imweb_user'

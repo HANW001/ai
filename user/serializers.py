@@ -1,8 +1,13 @@
 from rest_framework import serializers
-from .models import User
+from .models import Cafe24User , ImwebUser
 
 # serializer.py
-class userSerializer(serializers.ModelSerializer):
+class cafe24UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model=User
-        fields = ('mall','id', 'password', 'client_id', 'client_secretkey', 'servicekey')
+        model=Cafe24User
+        fields = '__all__'
+
+class imwebUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=ImwebUser
+        fields = '__all__'

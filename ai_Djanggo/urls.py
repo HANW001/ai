@@ -23,6 +23,7 @@ urlpatterns = [
     # path("orders/", include('orders.urls')),
     path("user/", include('user.urls')),
     path("order/", include('order.urls')),
+    path("imweb/", include('imweb_api.urls')),
 
     path("api-auth/", include('rest_framework.urls')),
 ]
