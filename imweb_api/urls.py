@@ -1,13 +1,11 @@
 from django.contrib import admin
 from django.urls import include, path
 
-from user.views import createCafe24User, createImwebUser,getUser, loginUser
+from imweb_api.views import getImweb,getImwebReviews
 
 urlpatterns = [
 
-    path('getUser/', getUser),
-    path('postCafe24User/', createCafe24User),
-    path('postImwebUser/', createImwebUser),
-    path('login/', loginUser),
+    path('getImweb/', getImweb),
+    path('getImwebReviews/', getImwebReviews),
 
 ]

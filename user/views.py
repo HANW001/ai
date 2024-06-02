@@ -31,7 +31,7 @@ def createImwebUser(request):
 @api_view(['POST'])
 def loginUser(request):
     # mall = request.data.get('mall')  # Assuming mall is also sent in the request
-    try:
+
 
         id = request.data.get('id')
         password = request.data.get('password')
@@ -41,29 +41,35 @@ def loginUser(request):
         user = Cafe24User.objects.filter(id=id,password=password).first()
         print(user)
 
+        if user is None:
+            id = request.data.get('id')
+            password = request.data.get('password')
+            print(id)
+            print(password)
+            
+
+            # Try to find the user - You might need to refine this query.
+            user = ImwebUser.objects.filter(id=id,password=password).first()
+            print(user)
+
+            # Authenticate if the user exists
+            if user is not None:
+                token = get_random_string(length=32)
+                queryset = ImwebUser.objects.filter(id=id)
+                serializer = imwebUserSerializer(queryset,many=True)
+                return Response({ 'message': 'Login successful','token':token,'userData':serializer.data ,'loginSite':'imweb'}, status=status.HTTP_200_OK)
+            else:
+                return Response({ 'error': 'Invalid credentials' }, status=status.HTTP_401_UNAUTHORIZED)
+            
+
         # Authenticate if the user exists
         if user is not None:
             token = get_random_string(length=32)
             queryset = Cafe24User.objects.filter(id=id)
             serializer = cafe24UserSerializer(queryset,many=True)
-            return Response({ 'message': 'Login successful','token':token,'userData':serializer.data }, status=status.HTTP_200_OK)
+            return Response({ 'message': 'Login successful','token':token,'userData':serializer.data,'loginSite':'cafe24' }, status=status.HTTP_200_OK)
         else:
             return Response({ 'error': 'Invalid credentials' }, status=status.HTTP_401_UNAUTHORIZED)
-    except:
-        id = request.data.get('id')
-        password = request.data.get('password')
-        print(id)
 
-        # Try to find the user - You might need to refine this query.
-        user = ImwebUser.objects.filter(id=id,password=password).first()
-        print(user)
-
-        # Authenticate if the user exists
-        if user is not None:
-            token = get_random_string(length=32)
-            queryset = ImwebUser.objects.filter(id=id)
-            serializer = imwebUserSerializer(queryset,many=True)
-            return Response({ 'message': 'Login successful','token':token,'userData':serializer.data }, status=status.HTTP_200_OK)
-        else:
-            return Response({ 'error': 'Invalid credentials' }, status=status.HTTP_401_UNAUTHORIZED)
+        
     
