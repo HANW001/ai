@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework',
     "order",
     "user",
+    "imweb_api",
 ]
 
 MIDDLEWARE = [
